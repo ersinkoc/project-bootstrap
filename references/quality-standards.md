@@ -122,14 +122,15 @@ After ALL skills are generated, verify:
 
 1. **No contradictions**: Scan all skills for conflicting rules
 2. **Terminology consistency**: Same concept uses same name everywhere
-3. **Version consistency**: All tech versions match across skills
-4. **Error format consistency**: Same error shape/codes everywhere
-5. **Logging consistency**: Same structured log format everywhere
-6. **Validation consistency**: Same validation library/approach everywhere
-7. **Import consistency**: Same import style/organization everywhere
-8. **Test consistency**: Same test patterns/naming everywhere
-9. **Completeness**: Every tech stack component covered by at least one skill
-10. **No gaps**: No domain that affects code quality is unaddressed
+3. **Version consistency**: All tech versions match across skills AND were verified via web search (not memorized)
+4. **Version freshness**: Every version referenced was looked up in real-time during this bootstrap session
+5. **Error format consistency**: Same error shape/codes everywhere
+6. **Logging consistency**: Same structured log format everywhere
+7. **Validation consistency**: Same validation library/approach everywhere
+8. **Import consistency**: Same import style/organization everywhere
+9. **Test consistency**: Same test patterns/naming everywhere
+10. **Completeness**: Every tech stack component covered by at least one skill
+11. **No gaps**: No domain that affects code quality is unaddressed
 
 ---
 
@@ -148,3 +149,5 @@ If any of these are true, the skill MUST be rewritten:
 - Performance budgets use words like "fast", "efficient", "minimal"
 - Identical content to another generated skill (copy-paste)
 - Generic advice that applies to any project unchanged
+- **Tech versions were not verified via real-time lookup** (used memorized/hardcoded versions instead)
+- Code examples use deprecated APIs from older versions instead of the verified latest stable

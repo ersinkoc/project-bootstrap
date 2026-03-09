@@ -66,36 +66,63 @@ Extract or ask about:
 
 ### 1.2 — Determine Tech Stack
 
-Based on the answers, recommend a complete tech stack. Organize as a layered decision table:
+Based on the answers, recommend a complete tech stack.
+
+#### 🔍 MANDATORY: Version Research (Latest Stable)
+
+**Before proposing ANY technology, you MUST research its latest stable version.** Never rely on memorized versions — they may be outdated.
+
+**Research process** (for EVERY technology in the stack):
+1. Use web search or documentation lookup tools (Context7 `resolve-library-id` + `query-docs`, `WebSearch`, `WebFetch`) to find the current latest stable release
+2. Check the official website, npm/PyPI/crates.io registry, or GitHub releases page
+3. Record the exact latest stable version number (not RC, beta, or canary)
+4. If a tool is unavailable, explicitly warn the user: "⚠️ Could not verify latest version of {X} — please confirm"
+
+**Rules**:
+- ALWAYS pin to latest stable major.minor (e.g., `Next.js 16.1`, not just `Next.js`)
+- NEVER propose a version from memory without verification
+- If the user specified a version, respect it — but warn if a newer stable exists
+- Include the version verification date in the tech stack table
+- For rapidly evolving tools (frameworks, ORMs, UI libraries), check release date — skip if last release > 12 months ago (possibly abandoned)
+
+**Example research queries**:
+- `"next.js latest version"` → nextjs.org or npm
+- `"postgresql latest stable release"` → postgresql.org
+- `"tailwind css latest version"` → tailwindcss.com or npm
+- Context7: resolve library ID → query docs for version/changelog
+
+#### Tech Stack Decision Table
+
+Organize as a layered decision table:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  TECH STACK PROPOSAL                                │
-├────────────────┬────────────────────────────────────┤
-│ Category       │ Choice → Rationale                 │
-├────────────────┼────────────────────────────────────┤
-│ Language       │                                    │
-│ Runtime        │                                    │
-│ Framework      │                                    │
-│ Database       │                                    │
-│ ORM/Query      │                                    │
-│ Cache          │                                    │
-│ Auth           │                                    │
-│ UI Library     │                                    │
-│ CSS/Styling    │                                    │
-│ State Mgmt     │                                    │
-│ API Style      │                                    │
-│ Validation     │                                    │
-│ Testing        │                                    │
-│ CI/CD          │                                    │
-│ Hosting        │                                    │
-│ Monitoring     │                                    │
-│ Email          │                                    │
-│ File Storage   │                                    │
-│ Search         │                                    │
-│ Queue/Jobs     │                                    │
-│ Analytics      │                                    │
-└────────────────┴────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│  TECH STACK PROPOSAL (versions verified: {date})                     │
+├────────────────┬─────────────────────────────────┬───────────────────┤
+│ Category       │ Choice                          │ Rationale         │
+├────────────────┼─────────────────────────────────┼───────────────────┤
+│ Language       │ {name} {verified latest version} │                   │
+│ Runtime        │ {name} {verified latest version} │                   │
+│ Framework      │ {name} {verified latest version} │                   │
+│ Database       │ {name} {verified latest version} │                   │
+│ ORM/Query      │ {name} {verified latest version} │                   │
+│ Cache          │ {name} {verified latest version} │                   │
+│ Auth           │ {name} {verified latest version} │                   │
+│ UI Library     │ {name} {verified latest version} │                   │
+│ CSS/Styling    │ {name} {verified latest version} │                   │
+│ State Mgmt     │ {name} {verified latest version} │                   │
+│ API Style      │ {name} {verified latest version} │                   │
+│ Validation     │ {name} {verified latest version} │                   │
+│ Testing        │ {name} {verified latest version} │                   │
+│ CI/CD          │ {name} {verified latest version} │                   │
+│ Hosting        │ {name}                           │                   │
+│ Monitoring     │ {name} {verified latest version} │                   │
+│ Email          │ {name} {verified latest version} │                   │
+│ File Storage   │ {name}                           │                   │
+│ Search         │ {name} {verified latest version} │                   │
+│ Queue/Jobs     │ {name} {verified latest version} │                   │
+│ Analytics      │ {name} {verified latest version} │                   │
+└────────────────┴─────────────────────────────────┴───────────────────┘
 ```
 
 Only include rows relevant to the project. Each choice gets a one-line rationale.

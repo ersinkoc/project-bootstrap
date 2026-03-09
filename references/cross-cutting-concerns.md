@@ -258,3 +258,36 @@ When things fail, degrade in this order (preserve what matters most):
 8. **Nice-to-haves**: Can remove entirely (onboarding tips, feature announcements)
 
 Every skill should reference this priority when defining error recovery strategies.
+
+---
+
+## 13. Latest Stable Version Enforcement
+
+All generated skills and the bootstrap process itself MUST use the latest stable versions of every technology.
+
+**Rules**:
+- NEVER hardcode or memorize version numbers — always verify via web search or documentation tools before proposing
+- Use `WebSearch`, `WebFetch`, or Context7 (`resolve-library-id` + `query-docs`) to look up the current stable release of every technology
+- Every version referenced in ANY generated skill must match the version confirmed during the tech stack phase
+- If a version cannot be verified (tools unavailable), mark it explicitly: `⚠️ version unverified — confirm before use`
+- Generated skills must include the verified version in the Project Context table
+- When generating code examples, use syntax and APIs from the verified latest version (not deprecated patterns from older releases)
+- If the latest version introduces breaking changes from a widely-known older API, document the new way explicitly
+
+**Why**: AI models have a knowledge cutoff. Package ecosystems move fast. A skill generated with stale versions will produce outdated code, reference deprecated APIs, and miss security patches. Real-time verification eliminates this entirely.
+
+**Verification sources (in priority order)**:
+1. Official documentation site (e.g., nextjs.org, postgresql.org)
+2. Package registry (npm, PyPI, crates.io, Maven Central, pkg.go.dev)
+3. GitHub releases page
+4. Context7 library documentation lookup
+
+**What to verify for each technology**:
+| Check | Example |
+|-------|---------|
+| Latest stable version | Next.js → 16.1.0 |
+| Release date | 2026-02-15 |
+| Node/runtime compatibility | Requires Node >= 22 |
+| Major breaking changes from previous | App Router is now default |
+| Deprecated features to avoid | `getServerSideProps` removed |
+| New features to prefer | Server Actions stable |

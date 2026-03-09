@@ -59,25 +59,28 @@ The bootstrapper interviews you (or extracts from your description):
 | **Scale** | Users at launch? Data volume? Geographic scope? Uptime SLA? |
 | **Constraints** | Required tech? Team size? Timeline? Budget? Compliance? |
 
-Then proposes a complete tech stack decision table:
+Then **searches the web in real-time** to verify the latest stable version of every technology before proposing:
 
 ```
-+-----------------+-------------------------------------------+
-| TECH STACK PROPOSAL                                         |
-+-----------------+-------------------------------------------+
-| Category        | Choice --> Rationale                      |
-+-----------------+-------------------------------------------+
-| Language        | TypeScript 5.8 --> Full-stack unification  |
-| Framework       | Next.js 16 --> SSR + API routes + RSC      |
-| Database        | PostgreSQL 17 --> ACID + JSON + FTS        |
-| ORM             | Drizzle --> Type-safe, lightweight         |
-| Auth            | Lucia --> Self-hosted, flexible             |
-| Styling         | Tailwind CSS 4 --> Utility-first, fast     |
-| Validation      | Zod --> Runtime + static, composable        |
-| Testing         | Vitest + Playwright --> Fast + reliable     |
-| ...             | ...                                         |
-+-----------------+-------------------------------------------+
++-----------------+-------------------+----------------------------------+
+| TECH STACK PROPOSAL (versions verified: 2026-03-09)                    |
++-----------------+-------------------+----------------------------------+
+| Category        | Choice            | Rationale                        |
++-----------------+-------------------+----------------------------------+
+| Language        | TypeScript 5.8    | Full-stack unification           |
+| Framework       | Next.js 16.1      | SSR + API routes + RSC           |
+| Database        | PostgreSQL 17.2   | ACID + JSON + FTS                |
+| ORM             | Drizzle 0.40      | Type-safe, lightweight           |
+| Auth            | Lucia 4.0         | Self-hosted, flexible            |
+| Styling         | Tailwind CSS 4.1  | Utility-first, fast              |
+| Validation      | Zod 4.0           | Runtime + static, composable     |
+| Testing         | Vitest 3.1        | Fast + HMR + native TS           |
+| ...             | ...               | ...                              |
++-----------------+-------------------+----------------------------------+
+  * Every version above was looked up via web search, not memorized
 ```
+
+> **No stale versions.** The bootstrapper uses web search, package registries, and documentation tools to verify every version at generation time. AI knowledge cutoffs don't matter -- you always get the latest stable.
 
 ### Phase 2: Skill Generation Engine
 
@@ -306,6 +309,7 @@ These rules are enforced across **every** generated skill:
 | **Backward Compatibility** | Add fields safely, deprecate before removing, version on break |
 | **Observability** | Every domain emits logs, metrics, and traces |
 | **Graceful Degradation** | Data integrity > Security > Privacy > Core features > Polish |
+| **Latest Version Enforcement** | Every tech version verified via real-time web search, never memorized |
 
 ## Project Structure
 

@@ -275,6 +275,7 @@ This catalog is **tech-stack agnostic** — adapt every skill to the project's a
 - Deprecated package detection and replacement schedule
 - Fork policy: when to fork, how to maintain
 - Supply chain security: package provenance, sigstore verification, Socket/Snyk
+- **Latest version enforcement**: all dependencies initialized at their latest stable version, verified via web search at bootstrap time — never rely on memorized or hardcoded versions
 
 ---
 
