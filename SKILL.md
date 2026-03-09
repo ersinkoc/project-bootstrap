@@ -387,14 +387,44 @@ Generate `_bootstrap-manifest.json`:
 
 ## Phase 4: Validation
 
-Before declaring bootstrap complete, run through:
+Before declaring bootstrap complete, run validation using **both JavaScript and Python validators**:
+
+### Validation Checklist
 
 1. **Completeness** — Every tech stack component is covered by at least one skill
 2. **Contradictions** — No two skills give conflicting advice
 3. **Dependencies** — Every skill's `depends_on` targets exist
 4. **Coverage** — Security, performance, privacy, testing, error handling all covered
 5. **Specificity** — Skills reference actual project names, paths, versions
-6. **Quality** — Run `scripts/validate_bootstrap.py` against the generated skills
+6. **Quality** — Run validators against the generated skills
+
+### Running Validators
+
+**JavaScript/Node.js (default):**
+```bash
+# Validate all skills
+node scripts/validate_bootstrap.js .claude/skills/
+
+# Check version consistency
+node scripts/version_checker.js .claude/skills/
+
+# Check compliance (if you have source code)
+node scripts/check_skill_compliance.js src/
+```
+
+**Python (alternative):**
+```bash
+# Validate all skills
+python scripts/validate_bootstrap.py .claude/skills/
+
+# Check version consistency
+python scripts/version_checker.py .claude/skills/
+
+# Check compliance
+python scripts/check_skill_compliance.py src/
+```
+
+### Validation Output
 
 Present a summary table:
 
@@ -414,21 +444,83 @@ Present a summary table:
 ║  ✅ No contradictions found                       ║
 ║  ✅ All dependencies resolved                     ║
 ║  ✅ Full coverage verified                        ║
+║  ✅ Validators passed                             ║
 ║  ✅ Ready to code                                 ║
 ╚═══════════════════════════════════════════════════╝
 ```
 
 ---
 
-## Phase 5: Handoff
+## Phase 5: Continuous Compliance (project-manager skill)
 
-After bootstrap, tell the user all skills are generated and placed in the project directory. Every file created or edited from now on will be governed by the relevant skills automatically.
+**CRITICAL:** After bootstrap, the `project-manager` skill ensures ongoing compliance:
 
-Then transition to actual development.
+### What project-manager Does
+
+- **Monitors** all code changes in real-time
+- **Validates** every modification against active skills
+- **Blocks** commits with skill violations
+- **Reports** compliance metrics weekly
+- **Guides** developers back to skill compliance
+- **Detects** skill drift automatically
+
+### Tools Available
+
+**JavaScript:**
+```bash
+# Check code compliance
+node scripts/check_skill_compliance.js src/
+
+# Analyze skill coverage
+node scripts/analyze_skill_coverage.js src/
+
+# Generate weekly report
+node scripts/generate_compliance_report.js --week
+```
+
+**Python:**
+```bash
+# Check code compliance
+python scripts/check_skill_compliance.py src/
+
+# Analyze skill coverage
+python scripts/analyze_skill_coverage.py src/
+
+# Generate weekly report
+python scripts/generate_compliance_report.py --week
+```
+
+### Pre-Commit Hooks
+
+Set up automated compliance checking:
+
+```bash
+# Install pre-commit hook
+cp scripts/pre-commit.example .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+```
+
+**Result:** Skills become **active guardrails**, not just documentation.
+
+---
+
+## Phase 6: Handoff
+
+After bootstrap and validation:
+
+1. **Confirm** all skills are generated in `.claude/skills/`
+2. **Explain** the `project-manager` skill will monitor compliance
+3. **Show** how to run validators (both JS and Python options)
+4. **Demonstrate** compliance checking commands
+5. **Transition** to actual development
+
+Every file created or edited will be governed by the relevant skills automatically, enforced by the project-manager skill.
 
 ---
 
 ## Rules for This Skill
+
+### Core Principles
 
 - This skill generates OTHER skills — it never generates application code
 - Generated skills must be project-specific, not generic boilerplate
@@ -438,4 +530,44 @@ Then transition to actual development.
 - The tech stack is tech-agnostic: works for TypeScript, Python, Go, Rust, Java, C#, Swift, Kotlin, PHP, Ruby, or any combination
 - For polyglot projects, generate per-language skills
 - Read ALL reference files before generating ANY skills
-- Use `scripts/validate_bootstrap.py` after generation
+
+### Validation Requirements
+
+**ALWAYS run validators after generation:**
+
+```bash
+# Option 1: JavaScript/Node.js (recommended, no Python needed)
+node scripts/validate_bootstrap.js .claude/skills/
+
+# Option 2: Python (if available)
+python scripts/validate_bootstrap.py .claude/skills/
+```
+
+**Validation must pass before declaring bootstrap complete.**
+
+### Required Skills
+
+**ALWAYS generate the `project-manager` skill** alongside other skills. It:
+- Monitors compliance throughout development
+- Validates code against skills in real-time
+- Generates compliance reports
+- Prevents skill drift
+
+### Version Verification
+
+**CRITICAL:** Every technology version MUST be verified via real-time lookup:
+- Use `WebSearch`, `WebFetch`, or Context7
+- Document verification source and date
+- Never use memorized versions
+- Verify ALL dependencies, not just frameworks
+
+### Post-Generation Checklist
+
+Before handoff:
+- [ ] All skills generated in `.claude/skills/`
+- [ ] `project-manager` skill included
+- [ ] Validation passed (JS or Python)
+- [ ] Version checker run
+- [ ] `_bootstrap-manifest.json` created
+- [ ] Compliance tools explained to user
+- [ ] Pre-commit hooks mentioned

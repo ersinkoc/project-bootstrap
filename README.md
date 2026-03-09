@@ -40,6 +40,7 @@
   - [Phase 2: Skill Generation Engine](#phase-2-skill-generation-engine)
   - [Phase 3: Output](#phase-3-output)
   - [Phase 4: Validation](#phase-4-validation)
+  - [Phase 5: Continuous Compliance](#phase-5-continuous-compliance-project-manager-skill)
 - [Quick Start](#quick-start)
 - [What Gets Generated](#what-gets-generated)
 - [Version Verification System](#version-verification-system)
@@ -151,7 +152,51 @@ All placed under `.claude/skills/` in your project root, picked up automatically
 
 ### Phase 4: Validation
 
-A built-in Python validator (`scripts/validate_bootstrap.py`) checks every generated skill for:
+Built-in validators (available in both **JavaScript/Node.js** and **Python**) check every generated skill for:
+
+- YAML frontmatter completeness
+- Required sections (Activation, Core Rules, Anti-Patterns, ...)
+- Code example count and quality
+- Vague language detection
+- Weak security language
+- Cross-skill consistency
+- Version verification documentation
+- Manifest integrity
+
+```bash
+# JavaScript/Node.js (default)
+npm run validate
+
+# Python (alternative)
+python scripts/validate_bootstrap.py .claude/skills/
+```
+
+### Phase 5: Continuous Compliance (Project Manager Skill)
+
+The `project-manager` skill **actively monitors** your codebase throughout development:
+
+**Real-time Enforcement:**
+- ✅ Validates every code change against active skills
+- 🚨 Blocks commits with skill violations  
+- 📊 Generates compliance reports
+- 🔍 Detects skill drift automatically
+- 📋 Enforces pre-commit checklists
+- 🎯 Guides developers back to compliance
+
+**Automated Tools:**
+```bash
+# Check code compliance
+npm run check-compliance
+# or: node scripts/check_skill_compliance.js src/
+
+# Analyze skill coverage
+npm run analyze-coverage
+
+# Generate weekly reports
+npm run report
+```
+
+**Result:** Skills aren't just documentation — they're **active guardrails** enforced at every step.
 
 - YAML frontmatter completeness
 - Required sections (Activation, Core Rules, Anti-Patterns, ...)
@@ -237,6 +282,12 @@ A built-in Python validator (`scripts/validate_bootstrap.py`) checks every gener
 | `event-driven-architecture` | Event sourcing, CQRS |
 | `graphql-patterns` | GraphQL API |
 | `microservice-patterns` | Distributed services |
+
+### Special Skill — Always Generated
+
+| # | Skill | What It Does |
+|---|-------|--------------|
+| 40 | `project-manager` | **Skill enforcement** — Monitors codebase, validates compliance, prevents drift, generates reports. Acts as project manager ensuring all code follows skills. |
 
 </details>
 
@@ -505,19 +556,24 @@ For polyglot projects, per-language skills are generated automatically.
 
 ### Common Issues
 
-**Issue**: `ModuleNotFoundError` when running validator
+**Issue**: Scripts won't run
 ```bash
-# Solution: Use Python 3.12+
-python --version  # Should be 3.12+
+# For JavaScript/Node.js:
+node --version  # Should be 18+
+npm run validate
 
-# Or run with explicit python
-python3 scripts/validate_bootstrap.py .claude/skills/
+# For Python (alternative):
+python --version  # Should be 3.12+
+python scripts/validate_bootstrap.py .claude/skills/
 ```
 
 **Issue**: Version checker shows outdated versions
 ```bash
-# Solution: Re-run bootstrapper to get latest versions
-# Or manually update version references in skills
+# JavaScript:
+npm run check-versions
+
+# Python:
+python scripts/version_checker.py .claude/skills/
 ```
 
 **Issue**: Skills not being picked up by Claude Code
@@ -531,9 +587,20 @@ ls .claude/skills/*/SKILL.md
 
 **Issue**: Generated code uses deprecated APIs
 ```bash
-# This should NOT happen if version verification was done correctly
-# Solution: Check manifest for unverified versions
+# JavaScript:
+node scripts/version_checker.js --check-manifest .claude/skills/_bootstrap-manifest.json
+
+# Python:
 python scripts/version_checker.py --check-manifest .claude/skills/_bootstrap-manifest.json
+```
+
+**Issue**: Compliance check fails
+```bash
+# Check which skills are violated:
+npm run check-compliance
+# or: node scripts/check_skill_compliance.js --staged
+
+# Fix violations and re-check
 ```
 
 ### Getting Help
