@@ -15,15 +15,44 @@
 
 ### Define how code must be written — before writing any code.
 
-**A meta-skill for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that generates an entire suite of project-specific coding skills, standards, and guardrails in minutes.**
+**A universal meta-skill for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that generates an entire suite of project-specific coding skills, standards, and guardrails in minutes.**
 
 ---
 
-`40+ skill domains` | `15-40 rules per skill` | `any language` | `any framework` | `zero bugs by design`
+`40+ skill domains` | `15-40 rules per skill` | `10+ languages` | `any framework` | `latest versions only` | `zero bugs by design`
+
+---
+
+**🚀 Language Agnostic**: TypeScript, Python, Go, Rust, Java, Kotlin, C#, Swift, PHP, Ruby, and more  
+**⚡ Version Enforcement**: Every technology verified for latest stable — never outdated  
+**🔒 Zero Tolerance**: Stale versions and deprecated APIs automatically rejected
 
 ---
 
 </div>
+
+## Table of Contents
+
+- [The Problem](#the-problem)
+- [The Solution](#the-solution)
+- [How It Works](#how-it-works)
+  - [Phase 1: Intelligence Gathering](#phase-1-intelligence-gathering)
+  - [Phase 2: Skill Generation Engine](#phase-2-skill-generation-engine)
+  - [Phase 3: Output](#phase-3-output)
+  - [Phase 4: Validation](#phase-4-validation)
+- [Quick Start](#quick-start)
+- [What Gets Generated](#what-gets-generated)
+- [Version Verification System](#version-verification-system)
+- [Cross-Cutting Guarantees](#cross-cutting-guarantees)
+- [Project Structure](#project-structure)
+- [Supported Tech Stacks](#supported-tech-stacks)
+- [Writing Principles](#writing-principles)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+- [Philosophy](#philosophy)
+
+---
 
 ## The Problem
 
@@ -291,8 +320,76 @@ and bootstrap a complete skill suite for it.
 ### 4. Validate
 
 ```bash
+# Full validation
 python scripts/validate_bootstrap.py .claude/skills/
+
+# Check version consistency across all skills
+python scripts/version_checker.py .claude/skills/
+
+# Check versions in manifest
+python scripts/version_checker.py --check-manifest .claude/skills/_bootstrap-manifest.json
 ```
+
+## Version Verification System
+
+This bootstrapper has **zero tolerance for outdated versions**. Every technology version is verified in real-time during generation.
+
+### How It Works
+
+1. **Real-time Verification**: Every technology version is looked up using:
+   - Official documentation sites
+   - Package registries (npm, PyPI, crates.io, Maven)
+   - GitHub releases
+   - Web search as fallback
+
+2. **Automatic Detection**: The `version_checker.py` script:
+   - Extracts all version references from generated skills
+   - Compares against minimum required versions
+   - Flags outdated or unverified versions
+   - Checks version consistency across all skills
+
+3. **Hard Rules**:
+   - ❌ Never use memorized versions
+   - ❌ Never skip verification for "well-known" packages
+   - ✅ Always document verification source and date
+   - ✅ Always use latest API syntax in code examples
+
+### Verification Matrix
+
+| Language | Minimum Version | Package Manager | Status Check |
+|----------|----------------|-----------------|--------------|
+| **TypeScript** | Node 22 LTS, TS 5.7+ | npm 10+ | ✅ Verified |
+| **Python** | 3.12+ | pip 24+ / uv | ✅ Verified |
+| **Go** | 1.24+ | Go modules | ✅ Verified |
+| **Rust** | 1.85+ | Cargo | ✅ Verified |
+| **Java** | 21 LTS | Maven/Gradle | ✅ Verified |
+| **Kotlin** | 2.1+ | Gradle | ✅ Verified |
+| **C#** | .NET 9+ | NuGet | ✅ Verified |
+| **Swift** | 6.0+ | SwiftPM | ✅ Verified |
+| **PHP** | 8.4+ | Composer 2+ | ✅ Verified |
+| **Ruby** | 3.4+ | Bundler | ✅ Verified |
+
+### Running Version Checks
+
+```bash
+# Check all versions in generated skills
+python scripts/version_checker.py .claude/skills/
+
+# Example output:
+# ✅ VERIFIED VERSIONS
+#    Node.js              22.14.0
+#    TypeScript           5.7.3
+#    Next.js              16.1.0
+#    React                19.0.0
+#
+# ⚠️  OUTDATED VERSIONS
+#    Python               3.11.0         Version 3.11.0 is below minimum 3.12.0
+#
+# ❌ VERSION ERRORS
+#    PostgreSQL           14.0           Local version (17.2) is newer
+```
+
+---
 
 ## Cross-Cutting Guarantees
 
@@ -324,7 +421,12 @@ project-bootstrap/
 |   +-- cross-cutting-concerns.md         # Rules that span all skills
 |   +-- bootstrap-prompt.md               # Ready-to-use prompts
 +-- scripts/
-    +-- validate_bootstrap.py             # Post-generation validator
+|   +-- validate_bootstrap.py             # Post-generation validator
+|   +-- version_checker.py                # Version verification tool
++-- examples/                             # Example generated skill suites
+|   +-- typescript-nextjs/                # Full example: TypeScript + Next.js
+|   +-- python-fastapi/                   # Full example: Python + FastAPI
+|   +-- minimal-project/                  # Minimal example: Simple project
 ```
 
 ## Supported Tech Stacks
@@ -344,6 +446,86 @@ The bootstrapper is **language and framework agnostic**. It adapts to:
 | Ruby | Rails, Sinatra | Meilisearch | Heroku |
 
 For polyglot projects, per-language skills are generated automatically.
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue**: `ModuleNotFoundError` when running validator
+```bash
+# Solution: Use Python 3.12+
+python --version  # Should be 3.12+
+
+# Or run with explicit python
+python3 scripts/validate_bootstrap.py .claude/skills/
+```
+
+**Issue**: Version checker shows outdated versions
+```bash
+# Solution: Re-run bootstrapper to get latest versions
+# Or manually update version references in skills
+```
+
+**Issue**: Skills not being picked up by Claude Code
+```bash
+# Solution: Ensure skills are in correct location
+ls -la .claude/skills/
+
+# Verify SKILL.md exists in each skill directory
+ls .claude/skills/*/SKILL.md
+```
+
+**Issue**: Generated code uses deprecated APIs
+```bash
+# This should NOT happen if version verification was done correctly
+# Solution: Check manifest for unverified versions
+python scripts/version_checker.py --check-manifest .claude/skills/_bootstrap-manifest.json
+```
+
+### Getting Help
+
+- **Documentation**: Check `references/` directory for detailed guides
+- **Examples**: See `examples/` directory for sample projects
+- **Issues**: Report bugs at https://github.com/ersinkoc/project-bootstrap/issues
+
+---
+
+## Contributing
+
+Contributions are welcome! Here's how to help:
+
+### Adding New Examples
+1. Create `examples/your-example/` directory
+2. Add `README.md` with project description
+3. Include skill structure or detailed description
+4. Submit PR with clear description
+
+### Improving Documentation
+- Fix typos or unclear sections
+- Add more code examples
+- Translate to other languages
+
+### Reporting Bugs
+- Include your tech stack
+- Provide minimal reproduction steps
+- Include validator output
+
+### Code Changes
+- Run validator before submitting: `python scripts/validate_bootstrap.py .`
+- Ensure version checker passes: `python scripts/version_checker.py .`
+- Update relevant documentation
+
+---
+
+## License
+
+MIT License - see LICENSE file for details.
+
+This project is open source and free to use for personal and commercial projects.
+
+---
 
 ## Writing Principles
 

@@ -490,3 +490,183 @@ When generating `{language}-standards`, include these type-safety rules per lang
 **Swift**: no force unwrapping, optional binding, Result type, actor isolation, Sendable protocol, structured concurrency (async let, TaskGroup)
 
 **C#**: nullable reference types enabled, record types, pattern matching, async/await (no .Result blocking), span for perf-critical paths
+
+---
+
+## Language-Agnostic Version Verification Guide
+
+When generating skills for ANY language, verify these versions BEFORE generating code.
+
+### Universal Version Matrix (2026)
+
+```
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ LANGUAGE   │ COMPILER    │ LTS VERSION  │ PACKAGE MGR  │ MIN TOOLS              │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ TypeScript │ Node.js     │ 22.x LTS     │ npm 10+      │ TypeScript 5.7+, ESLint│
+│ Python     │ CPython     │ 3.12+        │ pip/uv       │ mypy 1.8+, ruff 0.9+   │
+│ Go         │ go          │ 1.24+        │ go modules   │ golangci-lint 1.60+    │
+│ Rust       │ rustc       │ 1.85+        │ cargo        │ clippy, rustfmt        │
+│ Java       │ OpenJDK     │ 21 LTS       │ Maven/Gradle │ checkstyle, spotbugs   │
+│ Kotlin     │ kotlinc     │ 2.1+         │ Gradle       │ ktlint, detekt         │
+│ C#         │ .NET SDK    │ 9.0+         │ NuGet        │ analyzers, format      │
+│ Swift      │ swiftc      │ 6.0+         │ SwiftPM      │ swiftlint, swiftformat │
+│ PHP        │ PHP         │ 8.4+         │ Composer 2+  │ PHPStan 2+, Psalm      │
+│ Ruby       │ Ruby        │ 3.4+         │ Bundler      │ RuboCop, solargraph    │
+└────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Verification Commands per Language
+
+```bash
+# TypeScript / Node.js
+node --version          # Verify v22.x
+npm --version           # Verify 10.x
+npx tsc --version       # Verify 5.7+
+
+# Python
+python --version        # Verify 3.12+
+pip --version           # Verify 24+
+python -m mypy --version # Verify 1.8+
+
+# Go
+go version              # Verify 1.24+
+go env GOVERSION
+
+# Rust
+rustc --version         # Verify 1.85+
+cargo --version
+
+# Java
+java --version          # Verify 21
+javac --version
+
+# C#
+dotnet --version        # Verify 9.0+
+
+# Swift
+swift --version         # Verify 6.0+
+
+# PHP
+php --version           # Verify 8.4+
+composer --version      # Verify 2.x
+
+# Ruby
+ruby --version          # Verify 3.4+
+bundle --version
+```
+
+### Code Example Requirements
+
+Every generated skill MUST:
+1. Use **verified latest version** APIs only
+2. Include **version pragma** where applicable
+3. Show **import/require** statements
+4. Use **modern syntax** (not legacy compatibility mode)
+5. Include **type annotations** where language supports it
+
+**Example: TypeScript 5.7+ vs Legacy**
+```typescript
+// ❌ OLD (TypeScript < 5.0)
+import { useState } from 'react';
+const [count, setCount] = useState<number>(0);
+
+// ✅ NEW (TypeScript 5.7+)
+import { useState } from 'react';
+const [count, setCount] = useState(0); // Inference improved
+```
+
+**Example: Python 3.12+ Features**
+```python
+# ✅ NEW (Python 3.12+)
+# Type parameter syntax
+def process[T](items: list[T]) -> T:
+    return items[0]
+
+# Improved f-strings
+value = 42
+print(f"The value is {value=}")  # The value is value=42
+
+# Exception groups
+try:
+    raise ExceptionGroup("multiple", [ValueError(), TypeError()])
+except* ValueError:
+    print("Caught ValueError")
+```
+
+### Version Verification Script Template
+
+Include this in every `{language}-standards` skill:
+
+```python
+# version_check.py — Run before bootstrap
+def verify_versions():
+    """Verify all tools are at required minimum versions."""
+    checks = {
+        "python": ("3.12.0", sys.version_info),
+        "pip": ("24.0.0", get_pip_version()),
+        "ruff": ("0.9.0", get_ruff_version()),
+        # Add all tools...
+    }
+    
+    for tool, (min_ver, current_ver) in checks.items():
+        if not version_gte(current_ver, min_ver):
+            raise VersionError(
+                f"{tool} {current_ver} < required {min_ver}. "
+                f"Please upgrade: pip install --upgrade {tool}"
+            )
+```
+
+### Version Pinning in Generated Projects
+
+Every generated project MUST include locked versions:
+
+**TypeScript (package.json)**
+```json
+{
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "dependencies": {
+    "next": "16.1.0",  // Pinned exact
+    "react": "19.0.0",
+    "typescript": "5.7.3"
+  }
+}
+```
+
+**Python (requirements.txt)**
+```
+# requirements.txt — All versions pinned
+fastapi==0.115.0
+pydantic==2.10.0
+uvicorn==0.34.0
+```
+
+**Rust (Cargo.toml)**
+```toml
+[dependencies]
+tokio = "=1.43.0"  # Pinned with =
+axum = "=0.8.0"
+serde = "=1.0.217"
+```
+
+**Go (go.mod)**
+```
+go 1.24
+
+require (
+    github.com/gin-gonic/gin v1.10.0
+)
+```
+
+### Outdated Version Detection
+
+Flag these patterns as **REJECT**:
+- Node.js < 20 (EOL)
+- Python < 3.11 (security risk)
+- Go < 1.22 (missing generics improvements)
+- Rust < 1.75 (async traits unstable)
+- Java < 21 (missing virtual threads)
+- PHP < 8.3 (missing readonly classes)

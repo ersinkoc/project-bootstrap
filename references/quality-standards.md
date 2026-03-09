@@ -151,3 +151,84 @@ If any of these are true, the skill MUST be rewritten:
 - Generic advice that applies to any project unchanged
 - **Tech versions were not verified via real-time lookup** (used memorized/hardcoded versions instead)
 - Code examples use deprecated APIs from older versions instead of the verified latest stable
+
+---
+
+## Version Verification Checklist — MANDATORY
+
+**Every generated skill MUST pass this checklist before being considered complete:**
+
+### Per-Technology Verification
+- [ ] **Core language version** verified via official site/registry
+- [ ] **Runtime version** verified (Node, Python, JVM, .NET, etc.)
+- [ ] **Framework version** verified via docs + registry
+- [ ] **Database version** verified via official site
+- [ ] **Every dependency** in package manifest has verified version
+- [ ] **Linter/formatter** version verified
+- [ ] **Testing framework** version verified
+- [ ] **CI/CD tool** versions verified
+
+### Documentation Requirements
+- [ ] **Verification source** documented for each technology
+- [ ] **Verification date** recorded (ISO-8601 format)
+- [ ] **Release date** checked (reject if >6 months old)
+- [ ] **Breaking changes** documented
+- [ ] **Deprecated APIs** identified and avoided
+
+### Code Quality Requirements
+- [ ] **All code examples** use latest API syntax only
+- [ ] **No deprecated patterns** in any example
+- [ ] **Version pragmas** included where applicable (`// @ts-check`, `python3.12`, etc.)
+- [ ] **Import statements** show verified package versions
+
+### Manifest Requirements
+- [ ] `_bootstrap-manifest.json` includes verification records
+- [ ] Each technology has verification metadata
+- [ ] Unverified technologies marked with ⚠️ warning
+
+### Language-Specific Checks
+
+**TypeScript/JavaScript:**
+- [ ] Node.js >= 22 LTS verified
+- [ ] TypeScript >= 5.7 verified
+- [ ] All npm packages pinned to exact versions
+- [ ] No usage of deprecated Node.js APIs
+
+**Python:**
+- [ ] Python >= 3.12 verified
+- [ ] pip >= 24.0 verified
+- [ ] All packages pinned in requirements.txt
+- [ ] Using modern syntax (type params, improved f-strings)
+
+**Go:**
+- [ ] Go >= 1.24 verified
+- [ ] go.mod uses latest directives
+- [ ] No deprecated standard library packages
+
+**Rust:**
+- [ ] Rust >= 1.85 verified
+- [ ] Cargo.toml uses latest edition
+- [ ] No deprecated language features
+
+**Java:**
+- [ ] Java >= 21 LTS verified
+- [ ] Maven/Gradle using latest plugin versions
+- [ ] Using modern features (records, virtual threads)
+
+**Other languages** — apply same rigor for version verification.
+
+---
+
+## Language-Agnostic Quality Bar
+
+These standards apply regardless of programming language:
+
+| Aspect | Requirement | Verification |
+|--------|-------------|--------------|
+| **Type Safety** | Maximum strictness enabled | Compiler/linter config |
+| **Error Handling** | Custom error hierarchy | Code review |
+| **Testing** | >80% coverage, all critical paths | CI pipeline |
+| **Security** | All OWASP Top 10 addressed | Security scan |
+| **Performance** | Concrete budgets defined | Benchmarks |
+| **Documentation** | Every public API documented | Doc generation |
+| **Versioning** | All deps pinned to verified versions | Manifest audit |

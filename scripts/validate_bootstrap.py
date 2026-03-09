@@ -82,7 +82,9 @@ def validate_frontmatter(content: str, result: ValidationResult):
                     break
         desc = " ".join(desc_lines)
         if len(desc) < 80:
-            result.warnings.append(f"Description may be too short ({len(desc)} chars) — aim for 100+")
+            result.warnings.append(
+                f"Description may be too short ({len(desc)} chars) — aim for 100+"
+            )
         result.stats["description_length"] = len(desc)
 
 
@@ -92,33 +94,50 @@ def validate_sections(content: str, result: ValidationResult):
         "Core Rules": "Missing 'Core Rules' or 'Rules' section",
     }
     for section, msg in required.items():
-        pattern = rf'##?\s+.*{re.escape(section)}'
+        pattern = rf"##?\s+.*{re.escape(section)}"
         if not re.search(pattern, content, re.IGNORECASE):
             # Try alternate names
-            if section == "Core Rules" and re.search(r'##?\s+.*Rules?\b', content, re.IGNORECASE):
+            if section == "Core Rules" and re.search(
+                r"##?\s+.*Rules?\b", content, re.IGNORECASE
+            ):
                 continue
             result.errors.append(msg)
 
     recommended = [
-        "Pattern", "Anti-Pattern", "Security", "Performance",
-        "Error", "Checklist", "Edge Case"
+        "Pattern",
+        "Anti-Pattern",
+        "Security",
+        "Performance",
+        "Error",
+        "Checklist",
+        "Edge Case",
     ]
     for section in recommended:
-        if not re.search(rf'##?\s+.*{section}', content, re.IGNORECASE):
-            result.warnings.append(f"No section matching '{section}' — recommended for completeness")
+        if not re.search(rf"##?\s+.*{section}", content, re.IGNORECASE):
+            result.warnings.append(
+                f"No section matching '{section}' — recommended for completeness"
+            )
 
 
 def validate_code_blocks(content: str, result: ValidationResult):
-    blocks = re.findall(r'```(\w*)\n(.*?)```', content, re.DOTALL)
+    blocks = re.findall(r"```(\w*)\n(.*?)```", content, re.DOTALL)
     result.stats["code_blocks"] = len(blocks)
 
     if len(blocks) == 0:
         result.errors.append("No code examples — skills must have concrete code")
     elif len(blocks) < 3:
-        result.warnings.append(f"Only {len(blocks)} code blocks — aim for 5+ (correct + incorrect)")
+        result.warnings.append(
+            f"Only {len(blocks)} code blocks — aim for 5+ (correct + incorrect)"
+        )
 
-    has_good = bool(re.search(r'[✅]|Correct|// Good|# Good|// DO\b|# DO\b', content))
-    has_bad = bool(re.search(r'[❌]|Incorrect|// Bad|# Bad|// DON.T|# DON.T|WRONG', content, re.IGNORECASE))
+    has_good = bool(re.search(r"[✅]|Correct|// Good|# Good|// DO\b|# DO\b", content))
+    has_bad = bool(
+        re.search(
+            r"[❌]|Incorrect|// Bad|# Bad|// DON.T|# DON.T|WRONG",
+            content,
+            re.IGNORECASE,
+        )
+    )
     if not has_good:
         result.warnings.append("No clearly marked CORRECT examples (✅)")
     if not has_bad:
@@ -126,33 +145,37 @@ def validate_code_blocks(content: str, result: ValidationResult):
 
 
 def validate_rules(content: str, result: ValidationResult):
-    rule_pattern = r'###\s+Rule\s+\d+'
+    rule_pattern = r"###\s+Rule\s+\d+"
     rules = re.findall(rule_pattern, content, re.IGNORECASE)
     result.stats["rules_count"] = len(rules)
 
     if len(rules) == 0:
         # Check for numbered rules in other formats
-        alt_rules = re.findall(r'###\s+\d+[\.\):]', content)
+        alt_rules = re.findall(r"###\s+\d+[\.\):]", content)
         if alt_rules:
             result.stats["rules_count"] = len(alt_rules)
         else:
-            result.warnings.append("No numbered rules found — rules should be explicit and numbered")
+            result.warnings.append(
+                "No numbered rules found — rules should be explicit and numbered"
+            )
     elif len(rules) < 5:
         result.warnings.append(f"Only {len(rules)} rules — most skills need 15-40")
 
 
 def validate_anti_patterns(content: str, result: ValidationResult):
-    severity_markers = re.findall(r'[🔴🟠🟡🟢]', content)
+    severity_markers = re.findall(r"[🔴🟠🟡🟢]", content)
     result.stats["anti_patterns_with_severity"] = len(severity_markers)
 
-    if not re.search(r'anti.?pattern', content, re.IGNORECASE):
+    if not re.search(r"anti.?pattern", content, re.IGNORECASE):
         result.warnings.append("No anti-patterns section — document what NOT to do")
 
 
 def validate_references(skill_dir: Path, result: ValidationResult):
     refs_dir = skill_dir / "references"
     if not refs_dir.exists():
-        result.warnings.append("No references/ directory — add patterns.md, anti-patterns.md, checklist.md")
+        result.warnings.append(
+            "No references/ directory — add patterns.md, anti-patterns.md, checklist.md"
+        )
         return
 
     expected = {
@@ -165,14 +188,17 @@ def validate_references(skill_dir: Path, result: ValidationResult):
         if not fpath.exists():
             result.warnings.append(f"Missing references/{fname}")
         elif fpath.stat().st_size < min_size:
-            result.warnings.append(f"references/{fname} seems short ({fpath.stat().st_size} bytes, expect ≥{min_size})")
+            result.warnings.append(
+                f"references/{fname} seems short ({fpath.stat().st_size} bytes, expect ≥{min_size})"
+            )
 
 
 def validate_content_quality(content: str, result: ValidationResult):
     # Check for vague performance language
     vague_perf = re.findall(
-        r'\b(should be fast|keep it efficient|optimize where possible|be performant|as fast as possible)\b',
-        content, re.IGNORECASE
+        r"\b(should be fast|keep it efficient|optimize where possible|be performant|as fast as possible)\b",
+        content,
+        re.IGNORECASE,
     )
     if vague_perf:
         result.warnings.append(
@@ -181,8 +207,9 @@ def validate_content_quality(content: str, result: ValidationResult):
 
     # Check for weak security language
     weak_security = re.findall(
-        r'\bshould\b.*\b(validate|sanitize|encrypt|authenticate|authorize)\b',
-        content, re.IGNORECASE
+        r"\bshould\b.*\b(validate|sanitize|encrypt|authenticate|authorize)\b",
+        content,
+        re.IGNORECASE,
     )
     if weak_security:
         result.warnings.append(
@@ -191,19 +218,67 @@ def validate_content_quality(content: str, result: ValidationResult):
 
     # Check for generic advice
     generic = re.findall(
-        r'\b(follow best practices|use industry standards|implement proper|ensure adequate)\b',
-        content, re.IGNORECASE
+        r"\b(follow best practices|use industry standards|implement proper|ensure adequate)\b",
+        content,
+        re.IGNORECASE,
     )
     if generic:
         result.warnings.append(
             f"Generic advice detected: '{generic[0]}' — be specific about WHAT to do"
         )
 
+    # Check for version verification markers
+    validate_version_references(content, result)
+
     # Count total lines
     lines = content.split("\n")
     result.stats["total_lines"] = len(lines)
     if len(lines) > 500:
-        result.warnings.append(f"SKILL.md is {len(lines)} lines — consider moving detail to references/")
+        result.warnings.append(
+            f"SKILL.md is {len(lines)} lines — consider moving detail to references/"
+        )
+
+
+def validate_version_references(content: str, result: ValidationResult):
+    """Check that version references are verified, not memorized."""
+
+    # Look for unverified version warnings
+    unverified_pattern = r"⚠️.*version.*unverified|version.*unverified.*⚠️"
+    if re.search(unverified_pattern, content, re.IGNORECASE):
+        result.warnings.append(
+            "Contains unverified version references — MUST verify before production"
+        )
+
+    # Check for version patterns that should have verification
+    version_patterns = [
+        r"\b\d+\.\d+\.\d+\b",  # semantic versions
+        r"\b\d+\.\d+\b",  # major.minor
+    ]
+
+    has_versions = any(re.search(p, content) for p in version_patterns)
+    has_verification = bool(
+        re.search(
+            r"verified|verification|latest stable|release date", content, re.IGNORECASE
+        )
+    )
+
+    if has_versions and not has_verification:
+        result.warnings.append(
+            "Contains version numbers without verification documentation — "
+            "MUST document how versions were verified"
+        )
+
+    # Check for outdated version references (red flags)
+    outdated_indicators = [
+        (r"\bNode\.js\s+(14|16|18|20)\b", "Outdated Node.js version (< 22 LTS)"),
+        (r"\bPython\s+(2\.|3\.[0-9])\b", "Outdated Python version (< 3.12)"),
+        (r"\bGo\s+1\.(1[0-9]|2[0-3])\b", "Outdated Go version (< 1.24)"),
+        (r"\bJava\s+(8|11|17)\b(?!.*LTS)", "Consider Java 21 LTS"),
+    ]
+
+    for pattern, message in outdated_indicators:
+        if re.search(pattern, content):
+            result.warnings.append(f"{message} — consider upgrading to latest stable")
 
 
 def validate_skill(skill_dir: Path) -> ValidationResult:
@@ -218,7 +293,9 @@ def validate_skill(skill_dir: Path) -> ValidationResult:
     result.stats["size_bytes"] = len(content)
 
     if len(content) < 500:
-        result.errors.append(f"SKILL.md too short ({len(content)} bytes) — likely incomplete")
+        result.errors.append(
+            f"SKILL.md too short ({len(content)} bytes) — likely incomplete"
+        )
 
     validate_frontmatter(content, result)
     validate_sections(content, result)
@@ -268,11 +345,11 @@ def validate_cross_skill(skills_dir: Path, results: list[ValidationResult]):
     # Basic contradiction detection: look for conflicting tech mentions
     tech_mentions = {}
     patterns_to_check = [
-        (r'\b(Zod|Joi|Yup|Valibot|ArkType)\b', "validation library"),
-        (r'\b(Jest|Vitest|Mocha|Ava|pytest|go test)\b', "test runner"),
-        (r'\b(Tailwind|styled-components|CSS Modules|Sass|emotion)\b', "CSS approach"),
-        (r'\b(REST|GraphQL|gRPC|tRPC)\b', "API style"),
-        (r'\b(Zustand|Redux|Jotai|Recoil|Pinia|Vuex|MobX)\b', "state management"),
+        (r"\b(Zod|Joi|Yup|Valibot|ArkType)\b", "validation library"),
+        (r"\b(Jest|Vitest|Mocha|Ava|pytest|go test)\b", "test runner"),
+        (r"\b(Tailwind|styled-components|CSS Modules|Sass|emotion)\b", "CSS approach"),
+        (r"\b(REST|GraphQL|gRPC|tRPC)\b", "API style"),
+        (r"\b(Zustand|Redux|Jotai|Recoil|Pinia|Vuex|MobX)\b", "state management"),
     ]
     for pattern, category in patterns_to_check:
         found = set()
@@ -283,6 +360,48 @@ def validate_cross_skill(skills_dir: Path, results: list[ValidationResult]):
             warnings.append(
                 f"Multiple {category} options mentioned across skills: {', '.join(found)} — pick ONE"
             )
+
+    # Check for version consistency across skills
+    version_patterns = [
+        (r"\b(?:Next\.js|Next)\s+v?(\d+\.\d+(?:\.\d+)?)", "Next.js"),
+        (r"\b(?:React)\s+v?(\d+\.\d+(?:\.\d+)?)", "React"),
+        (r"\b(?:TypeScript|TS)\s+v?(\d+\.\d+(?:\.\d+)?)", "TypeScript"),
+        (r"\b(?:Node\.js|Node)\s+v?(\d+\.\d+(?:\.\d+)?)", "Node.js"),
+        (r"\bPython\s+(\d+\.\d+(?:\.\d+)?)", "Python"),
+        (r"\bGo\s+(\d+\.\d+(?:\.\d+)?)", "Go"),
+        (r"\bRust\s+(\d+\.\d+(?:\.\d+)?)", "Rust"),
+        (r"\bJava\s+(\d+\.?\d*)", "Java"),
+        (r"\b(?:PostgreSQL|Postgres)\s+(\d+\.?\d*)", "PostgreSQL"),
+    ]
+
+    for pattern, tech_name in version_patterns:
+        versions_found = {}
+        for skill_name, content in all_contents.items():
+            matches = re.findall(pattern, content, re.IGNORECASE)
+            if matches:
+                versions_found[skill_name] = matches[0]
+
+        if len(set(versions_found.values())) > 1:
+            warnings.append(
+                f"Version inconsistency for {tech_name}: "
+                f"{', '.join(f'{skill}={ver}' for skill, ver in versions_found.items())}"
+            )
+
+    # Check for version verification documentation
+    unverified_skills = []
+    for skill_name, content in all_contents.items():
+        has_versions = bool(re.search(r"\b\d+\.\d+\.?\d*\b", content))
+        has_verification = bool(
+            re.search(r"verified|verification|latest stable", content, re.IGNORECASE)
+        )
+
+        if has_versions and not has_verification:
+            unverified_skills.append(skill_name)
+
+    if unverified_skills:
+        warnings.append(
+            f"Skills missing version verification documentation: {', '.join(unverified_skills)}"
+        )
 
     return errors, warnings
 

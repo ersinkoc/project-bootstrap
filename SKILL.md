@@ -1,7 +1,7 @@
 ---
 name: project-bootstrapper
 description: |
-  Meta-skill that bootstraps any software project by auto-generating a complete suite of hyper-detailed, project-specific coding skills BEFORE any code is written. Analyzes the idea, determines tech stack, then generates 15-30+ skills covering architecture, security, performance, privacy, testing, error handling, accessibility, observability, data modeling, API design, DevOps, and every relevant domain. Each generated skill enforces zero-bug, zero-vulnerability standards with concrete code examples, anti-patterns, checklists, and measurable budgets. Triggers on: "bootstrap", "new project", "start from scratch", "build me", "I want to create", "set up project", "generate skills", "skill suite", or any project idea description. Use BEFORE writing any code.
+  Universal meta-skill that bootstraps ANY software project regardless of programming language. Auto-generates 15-30+ hyper-detailed, project-specific coding skills BEFORE writing code. Language-agnostic: works with TypeScript, Python, Go, Rust, Java, C#, Swift, Kotlin, PHP, Ruby, and polyglot projects. AGGRESSIVE version enforcement: EVERY technology version MUST be verified via real-time lookup — never use memorized versions. Generates skills for architecture, security, performance, privacy, testing, error handling, accessibility, observability, data modeling, API design, DevOps. Each skill enforces zero-bug standards with concrete code examples, anti-patterns, and measurable budgets. Triggers on: "bootstrap", "new project", "start project", "create project", "set up", "generate skills" — use BEFORE any code exists.
 ---
 
 # Project Bootstrapper
@@ -68,22 +68,47 @@ Extract or ask about:
 
 Based on the answers, recommend a complete tech stack.
 
-#### 🔍 MANDATORY: Version Research (Latest Stable)
+#### 🔍 MANDATORY: Version Research (Latest Stable) — ZERO TOLERANCE
 
-**Before proposing ANY technology, you MUST research its latest stable version.** Never rely on memorized versions — they may be outdated.
+**This is NON-NEGOTIABLE. Before proposing ANY technology, you MUST verify its latest stable version via real-time lookup.**
 
-**Research process** (for EVERY technology in the stack):
-1. Use web search or documentation lookup tools (Context7 `resolve-library-id` + `query-docs`, `WebSearch`, `WebFetch`) to find the current latest stable release
-2. Check the official website, npm/PyPI/crates.io registry, or GitHub releases page
-3. Record the exact latest stable version number (not RC, beta, or canary)
-4. If a tool is unavailable, explicitly warn the user: "⚠️ Could not verify latest version of {X} — please confirm"
+⚠️ **CRITICAL**: AI models have knowledge cutoffs. Package ecosystems evolve daily. A skill generated with outdated versions will produce vulnerable, deprecated code.
 
-**Rules**:
-- ALWAYS pin to latest stable major.minor (e.g., `Next.js 16.1`, not just `Next.js`)
-- NEVER propose a version from memory without verification
-- If the user specified a version, respect it — but warn if a newer stable exists
-- Include the version verification date in the tech stack table
-- For rapidly evolving tools (frameworks, ORMs, UI libraries), check release date — skip if last release > 12 months ago (possibly abandoned)
+**Research Protocol** (execute for EVERY technology):
+1. **Use available tools** (in priority order):
+   - `WebSearch`: `"{package} latest stable version {current_year}"`
+   - `WebFetch`: Official docs site (e.g., `nextjs.org`, `python.org`, `go.dev`)
+   - Context7: `resolve-library-id` → `query-docs` for changelog
+   - Package registry: npmjs.com, pypi.org, crates.io, pkg.go.dev, maven.apache.org
+
+2. **Extract exact version**:
+   - Format: `Major.Minor.Patch` (e.g., `Next.js 16.1.0`)
+   - Verify it's STABLE (not alpha, beta, RC, canary, nightly)
+   - Note release date — reject if >6 months old without updates
+
+3. **Document verification**:
+   ```
+   Technology: Next.js
+   Version: 16.1.0
+   Verified via: nextjs.org/blog
+   Verification date: 2026-03-09
+   Release date: 2026-02-15
+   Node requirement: >= 22.0.0
+   ```
+
+**HARDCORE RULES**:
+- ✅ **MUST**: Verify EVERY dependency, not just frameworks
+- ✅ **MUST**: Pin exact versions in all configs (`package.json`, `requirements.txt`, `Cargo.toml`, etc.)
+- ✅ **MUST**: Use latest APIs/syntax from verified version in ALL code examples
+- ❌ **NEVER**: Use memorized versions under ANY circumstance
+- ❌ **NEVER**: Skip verification even for "well-known" packages
+- ❌ **NEVER**: Use deprecated APIs from older versions
+- ⚠️ **WARN**: If verification fails, mark clearly: `⚠️ VERSION UNVERIFIED — MUST CONFIRM`
+
+**Abandonment Detection**:
+- Last commit/release >12 months = investigate alternatives
+- No maintainer response to issues >6 months = red flag
+- Security advisories unpatched >30 days = DO NOT USE
 
 **Example research queries**:
 - `"next.js latest version"` → nextjs.org or npm
@@ -128,6 +153,29 @@ Organize as a layered decision table:
 Only include rows relevant to the project. Each choice gets a one-line rationale.
 
 **Wait for user confirmation before proceeding.** The tech stack determines everything that follows.
+
+#### Language-Agnostic Version Verification Matrix
+
+For EVERY language, verify these tool versions:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ LANGUAGE     │ CORE VERSION │ PACKAGE MANAGER │ LINTER     │ TESTER      │
+├─────────────────────────────────────────────────────────────────────────┤
+│ TypeScript   │ Latest Node  │ npm/pnpm 10+    │ ESLint 9+  │ Vitest 3+   │
+│ Python       │ 3.12+        │ pip/uv          │ Ruff 0.9+  │ pytest 8+   │
+│ Go           │ 1.24+        │ go modules      │ golangci   │ go test     │
+│ Rust         │ Latest       │ cargo           │ clippy     │ cargo test  │
+│ Java         │ 21 LTS       │ Maven/Gradle    │ checkstyle │ JUnit 5     │
+│ Kotlin       │ 2.1+         │ Gradle          │ ktlint     │ Kotest      │
+│ C#           │ .NET 9+      │ NuGet           │ analyzers  │ xUnit       │
+│ Swift        │ 6.0+         │ SwiftPM         │ swiftlint  │ XCTest      │
+│ PHP          │ 8.4+         │ Composer 2+     │ PHPStan 2+ │ PHPUnit 11+ │
+│ Ruby         │ 3.4+         │ Bundler         │ RuboCop    │ RSpec       │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Polyglot Projects**: Generate separate `{language}-standards` skills for each language.
 
 ### 1.3 — Generate Skill Map
 

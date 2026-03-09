@@ -261,33 +261,146 @@ Every skill should reference this priority when defining error recovery strategi
 
 ---
 
-## 13. Latest Stable Version Enforcement
+## 13. Latest Stable Version Enforcement — ZERO TOLERANCE POLICY
 
-All generated skills and the bootstrap process itself MUST use the latest stable versions of every technology.
+⚠️ **THIS IS THE MOST CRITICAL CROSS-CUTTING CONCERN**
 
-**Rules**:
-- NEVER hardcode or memorize version numbers — always verify via web search or documentation tools before proposing
-- Use `WebSearch`, `WebFetch`, or Context7 (`resolve-library-id` + `query-docs`) to look up the current stable release of every technology
-- Every version referenced in ANY generated skill must match the version confirmed during the tech stack phase
-- If a version cannot be verified (tools unavailable), mark it explicitly: `⚠️ version unverified — confirm before use`
-- Generated skills must include the verified version in the Project Context table
-- When generating code examples, use syntax and APIs from the verified latest version (not deprecated patterns from older releases)
-- If the latest version introduces breaking changes from a widely-known older API, document the new way explicitly
+All generated skills and the bootstrap process itself **MUST** use the latest stable versions of every technology. **NO EXCEPTIONS.**
 
-**Why**: AI models have a knowledge cutoff. Package ecosystems move fast. A skill generated with stale versions will produce outdated code, reference deprecated APIs, and miss security patches. Real-time verification eliminates this entirely.
+### Why This Matters
 
-**Verification sources (in priority order)**:
-1. Official documentation site (e.g., nextjs.org, postgresql.org)
-2. Package registry (npm, PyPI, crates.io, Maven Central, pkg.go.dev)
-3. GitHub releases page
-4. Context7 library documentation lookup
+AI models have knowledge cutoffs. Package ecosystems evolve daily. A skill generated with stale versions will:
+- Produce code with **known security vulnerabilities**
+- Reference **deprecated APIs** that break in production
+- Miss **performance improvements** and new features
+- Create **technical debt** from day one
 
-**What to verify for each technology**:
+### Hard Rules
+
+1. **NEVER** use memorized version numbers — always verify
+2. **NEVER** skip verification for "well-known" packages
+3. **ALWAYS** document verification source and date
+4. **ALWAYS** use latest APIs/syntax in code examples
+5. **MUST** re-verify if bootstrap session spans >24 hours
+
+### Language-Agnostic Verification Matrix
+
+For **EVERY** project, regardless of language:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ VERIFICATION CHECKLIST (Must complete for ALL technologies)                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ □ Core language version (verified via official site)                        │
+│ □ Runtime version (Node, Python, JVM, .NET, etc.)                           │
+│ □ Framework version (verified via docs + registry)                          │
+│ □ Database version (verified via official site)                             │
+│ □ ORM/Query builder version                                                 │
+│ □ Validation library version                                                │
+│ □ Testing framework version                                                 │
+│ □ Linting/formatting tool version                                           │
+│ □ Authentication library version                                            │
+│ □ Every dependency in package manifest                                      │
+│ □ CI/CD tool versions                                                       │
+│ □ Container/runtime versions (Docker, K8s)                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Verification Protocol
+
+**Step 1: Identify Tools**
+Check which verification tools are available:
+- `WebSearch` — general web search
+- `WebFetch` — fetch specific URLs
+- Context7 — `resolve-library-id` + `query-docs`
+- Package registry APIs
+
+**Step 2: Execute Verification**
+For each technology, run at least ONE verification:
+
+```bash
+# Example verification queries (adapt to available tools):
+"{package} latest stable version 2026"
+"{package} npm latest" 
+"{package} pypi latest"
+"{package} crates.io latest"
+"site:{package}.org download"
+```
+
+**Step 3: Document Results**
+Create verification record:
+
+```json
+{
+  "technology": "Next.js",
+  "verified_version": "16.1.0",
+  "verification_source": "https://nextjs.org/blog",
+  "verification_date": "2026-03-09T10:30:00Z",
+  "release_date": "2026-02-15",
+  "verifier": "WebFetch",
+  "breaking_changes": ["App Router default", "Turbopack stable"],
+  "deprecated_apis": ["getServerSideProps", "getStaticProps"],
+  "new_features": ["Server Actions", "Partial Prerendering"]
+}
+```
+
+**Step 4: Validate in Code**
+- All `package.json` / `requirements.txt` / `Cargo.toml` entries use verified versions
+- All code examples use latest API syntax
+- No deprecated patterns in any generated skill
+
+### Verification Sources (Priority Order)
+
+| Priority | Source | When to Use |
+|----------|--------|-------------|
+| 1 | Official documentation site | Primary source for frameworks |
+| 2 | Package registry API | npm, PyPI, crates.io, Maven Central |
+| 3 | GitHub releases page | When registry unavailable |
+| 4 | Context7 docs lookup | For detailed API information |
+| 5 | Web search | Fallback when others fail |
+
+### What to Verify Per Technology
+
 | Check | Example |
 |-------|---------|
-| Latest stable version | Next.js → 16.1.0 |
-| Release date | 2026-02-15 |
-| Node/runtime compatibility | Requires Node >= 22 |
-| Major breaking changes from previous | App Router is now default |
-| Deprecated features to avoid | `getServerSideProps` removed |
-| New features to prefer | Server Actions stable |
+| **Latest stable version** | Next.js → 16.1.0 |
+| **Release date** | 2026-02-15 (reject if >6 months old) |
+| **Runtime compatibility** | Requires Node >= 22.0.0 |
+| **Breaking changes** | App Router is now default |
+| **Deprecated APIs** | `getServerSideProps` removed |
+| **New features** | Server Actions stable |
+| **Security patches** | CVE-2025-XXXX fixed in 16.0.2 |
+| **License changes** | Still MIT/Apache-2.0 |
+
+### Abandonment Detection
+
+Mark technology as **RISKY** if:
+- Last release >12 months ago
+- No commits to main branch >6 months
+- Unresolved security advisories >30 days
+- Maintainer unresponsive to issues >6 months
+
+**Action**: Propose actively maintained alternative.
+
+### Language-Specific Version Sources
+
+```
+TypeScript:  nodejs.org, npmjs.com, nextjs.org, react.dev
+Python:      python.org, pypi.org, docs.python.org
+Go:          go.dev, pkg.go.dev, golang.org
+Rust:        rust-lang.org, crates.io
+Java:        openjdk.org, maven.apache.org
+Kotlin:      kotlinlang.org
+C#:          dotnet.microsoft.com, nuget.org
+Swift:       swift.org, swiftpackageindex.com
+PHP:         php.net, packagist.org
+Ruby:        ruby-lang.org, rubygems.org
+```
+
+### Failure Handling
+
+If verification fails for a critical technology:
+1. **WARN**: `"⚠️ VERSION UNVERIFIED — MUST CONFIRM BEFORE USE"`
+2. **BLOCK**: Do not generate code examples for unverified versions
+3. **ALTERNATIVE**: Offer actively maintained alternatives
+4. **DOCUMENT**: Note verification failure in bootstrap manifest
