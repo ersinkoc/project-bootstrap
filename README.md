@@ -231,17 +231,31 @@ Every generated skill contains:
 
 ### 1. Install the Skill
 
-Copy this project into your Claude Code skills directory:
+The fastest way -- one command, done:
+
+```bash
+npx skills add ersinkoc/project-bootstrap
+```
+
+This automatically clones the skill into your project's `.claude/skills/` directory and makes it available to Claude Code immediately.
+
+<details>
+<summary><b>Alternative: Manual installation</b></summary>
+
+Clone and copy into your Claude Code skills directory:
+
+```bash
+git clone https://github.com/ersinkoc/project-bootstrap.git
+cp -r project-bootstrap/ your-project/.claude/skills/project-bootstrapper/
+```
+
+Or install globally for all projects:
 
 ```bash
 cp -r project-bootstrap/ ~/.claude/skills/project-bootstrapper/
 ```
 
-Or add it to a specific project:
-
-```bash
-cp -r project-bootstrap/ your-project/.claude/skills/project-bootstrapper/
-```
+</details>
 
 ### 2. Bootstrap a New Project
 
