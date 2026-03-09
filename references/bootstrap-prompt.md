@@ -17,7 +17,7 @@ Examples:
 
 Detailed: "A SaaS platform called 'TaskFlow' for freelancer project management. 
 Features: Kanban boards, time tracking, invoice generation, client portal. 
-Tech: Next.js 15, React 19, PostgreSQL, Stripe for payments. 
+Tech: Next.js 16, React 19, PostgreSQL 17, Stripe for payments.
 Scale: 1000 users in 3 months. Solo developer. GDPR compliant."
 
 Medium: "A CLI-based database migration tool in Go. Supports PostgreSQL and MySQL.

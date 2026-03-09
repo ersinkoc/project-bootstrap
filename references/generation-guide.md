@@ -284,7 +284,7 @@ IF auditable:
 6. Includes rollback plan as a comment
 7. Data migrations in separate files from schema migrations
 8. Migration naming: {timestamp}_{action}_{target}.{ext}
-   Example: 20240115120000_add_mfa_columns_to_users.sql
+   Example: 20260309120000_add_mfa_columns_to_users.sql
 ```
 
 ---

@@ -55,7 +55,7 @@ All skills that touch logging must use the same format:
 
 ```json
 {
-  "timestamp": "2024-01-15T10:30:00.000Z",
+  "timestamp": "2026-03-09T10:30:00.000Z",
   "level": "info",
   "message": "Short human-readable description",
   "service": "{service-name}",

@@ -405,7 +405,7 @@ This catalog is **tech-stack agnostic** — adapt every skill to the project's a
 ### 18. `accessibility-standards`
 **When**: Project has any user-facing interface
 **Minimum content**:
-- Target compliance level: WCAG 2.1 AA (or AAA for specific features)
+- Target compliance level: WCAG 2.2 AA (or AAA for specific features)
 - Semantic HTML rules: heading hierarchy, landmark regions, lists
 - ARIA rules: when to use, what to avoid (no ARIA > bad ARIA), live regions
 - Keyboard navigation: all interactive elements reachable, visible focus indicator, logical tab order

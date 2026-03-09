@@ -67,12 +67,12 @@ Then proposes a complete tech stack decision table:
 +-----------------+-------------------------------------------+
 | Category        | Choice --> Rationale                      |
 +-----------------+-------------------------------------------+
-| Language        | TypeScript 5.x --> Full-stack unification  |
-| Framework       | Next.js 15 --> SSR + API routes + RSC      |
-| Database        | PostgreSQL 16 --> ACID + JSON + FTS        |
+| Language        | TypeScript 5.8 --> Full-stack unification  |
+| Framework       | Next.js 16 --> SSR + API routes + RSC      |
+| Database        | PostgreSQL 17 --> ACID + JSON + FTS        |
 | ORM             | Drizzle --> Type-safe, lightweight         |
 | Auth            | Lucia --> Self-hosted, flexible             |
-| Styling         | Tailwind CSS 4 --> Utility-first, fast      |
+| Styling         | Tailwind CSS 4 --> Utility-first, fast     |
 | Validation      | Zod --> Runtime + static, composable        |
 | Testing         | Vitest + Playwright --> Fast + reliable     |
 | ...             | ...                                         |
@@ -268,7 +268,7 @@ I want to bootstrap a new project. Read the bootstrap skill and follow its instr
 
 A SaaS platform called "TaskFlow" for freelancer project management.
 Features: Kanban boards, time tracking, invoice generation, client portal.
-Tech: Next.js 15, PostgreSQL, Stripe. Scale: 1000 users in 3 months.
+Tech: Next.js 16, PostgreSQL 17, Stripe. Scale: 1000 users in 3 months.
 Solo developer. GDPR compliant.
 ```
 
