@@ -44,7 +44,7 @@ package-lock.json
 yarn.lock
 
 # Generated skills (for development testing)
-.claude/skills/
+# .claude/skills/ is NOT ignored - it contains the project's own skills
 _bootstrap-manifest.json
 
 # Testing
