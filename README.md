@@ -259,6 +259,23 @@ Every generated skill contains:
 | **Integration Points** | How skills connect and reference each other |
 | **Pre-Commit Checklist** | Automated + manual verification items |
 
+## Prerequisites
+
+### Required
+- **Node.js 18+** (for validation scripts and running the bootstrapper)
+- **Git** (for version control)
+
+### Optional (choose one)
+- **Python 3.12+** (alternative for validation scripts if you prefer Python)
+- **Claude Code** or **Claude.ai** (to run the bootstrapper skill)
+
+### System Requirements
+- Any OS (Windows, macOS, Linux)
+- 100MB free disk space
+- Internet connection (for version verification during bootstrap)
+
+---
+
 ## Quick Start
 
 ### 1. Install the Skill
@@ -319,15 +336,50 @@ and bootstrap a complete skill suite for it.
 
 ### 4. Validate
 
+We provide scripts in both **JavaScript (Node.js)** and **Python** — use whichever is available in your environment:
+
+#### Option A: JavaScript/Node.js (Recommended)
+```bash
+# Full validation
+npm run validate
+# or: node scripts/validate_bootstrap.js .claude/skills/
+
+# Check version consistency across all skills
+npm run check-versions
+# or: node scripts/version_checker.js .claude/skills/
+
+# Check versions in manifest
+node scripts/version_checker.js --check-manifest .claude/skills/_bootstrap-manifest.json
+
+# Check skill compliance
+npm run check-compliance
+# or: node scripts/check_skill_compliance.js src/
+
+# Analyze skill coverage
+npm run analyze-coverage
+# or: node scripts/analyze_skill_coverage.js src/
+
+# Generate compliance report
+npm run report
+# or: node scripts/generate_compliance_report.js --week
+```
+
+#### Option B: Python
 ```bash
 # Full validation
 python scripts/validate_bootstrap.py .claude/skills/
 
-# Check version consistency across all skills
+# Check version consistency
 python scripts/version_checker.py .claude/skills/
 
-# Check versions in manifest
-python scripts/version_checker.py --check-manifest .claude/skills/_bootstrap-manifest.json
+# Check skill compliance
+python scripts/check_skill_compliance.py src/
+
+# Analyze coverage
+python scripts/analyze_skill_coverage.py src/
+
+# Generate report
+python scripts/generate_compliance_report.py --week
 ```
 
 ## Version Verification System
